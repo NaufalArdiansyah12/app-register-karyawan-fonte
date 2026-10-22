@@ -1,0 +1,361 @@
+/* ============================================================================
+   SIAKWA — TEMA "NEO BRUTALISM"
+   Stylesheet bersama untuk seluruh halaman (admin panel, karyawan panel,
+   halaman presensi & absensi, serta halaman auth/login register).
+   Ciri khas: ketebalan border tebal, hard shadow (solid offset), warna-warna
+   brutal (kuning, pink, cyan, ungu, lime, oranye, merah), tipografi tebal
+   (Archivo Black) dan sidebar menu di sisi kiri.
+   ============================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+    /* Palet inti Neo Brutalism */
+    --nb-black:#111111;
+    --nb-bg:#f1ecdf;
+    --nb-surface:#fffdf4;
+    --nb-yellow:#ffd02f;
+    --nb-yellow-soft:#ffe9a3;
+    --nb-pink:#ff90e8;
+    --nb-cyan:#7df9ff;
+    --nb-purple:#b49cff;
+    --nb-lime:#c6f65d;
+    --nb-orange:#ffa94d;
+    --nb-red:#ff6b6b;
+    --nb-blue:#8ecfff;
+    --nb-sidebar-w:264px;
+    --nb-radius:14px;
+
+    /* Variabel semantik (kompatibel dengan markup lama) */
+    --primary:#ffd02f;
+    --primary-hover:#ffdb55;
+    --success:#63e6a5;
+    --warning:#ffa94d;
+    --danger:#ff6b6b;
+    --info:#7df9ff;
+    --dark:#111111;
+    --surface:#fffdf4;
+    --border:#111111;
+    --text:#111111;
+    --text-muted:#5f5b4e;
+    --radius:14px;
+    --shadow:6px 6px 0 #111111;
+    --shadow-sm:4px 4px 0 #111111;
+}
+
+/* ---------- Dasar ---------- */
+*, *::before, *::after { box-sizing: border-box; }
+body {
+    font-family:'Space Grotesk', system-ui, -apple-system, 'Segoe UI', sans-serif;
+    background-color:var(--nb-bg);
+    background-image:radial-gradient(rgba(17,17,17,.10) 1.5px, transparent 1.5px);
+    background-size:24px 24px;
+    background-attachment:fixed;
+    min-height:100vh;
+    color:#111111;
+    margin:0;
+}
+h1,h2,h3,h4,h5,h6 { font-weight:800; }
+a { color:#111111; }
+:focus-visible { outline:3px solid var(--nb-purple); outline-offset:2px; }
+
+.page-title {
+    font-family:'Archivo Black', 'Space Grotesk', sans-serif;
+    font-size:1.85rem;
+    font-weight:900;
+    line-height:1.1;
+    text-transform:uppercase;
+    letter-spacing:-.01em;
+    margin-bottom:4px;
+}
+.page-title::after {
+    content:'✦';
+    color:var(--nb-pink);
+    text-shadow:2px 2px 0 #111111;
+    margin-left:.45rem;
+    font-size:.65em;
+    vertical-align:.3em;
+}
+.page-sub { color:#5f5b4e; font-weight:700; font-size:.92rem; margin-bottom:20px; }
+
+hr { border-top:3px solid #111111; opacity:1; margin:1.4rem 0; }
+
+/* ---------- Layout utama (sidebar + main) ---------- */
+.app-main {
+    min-height:100vh;
+    padding:26px 20px 22px;
+    display:flex;
+    flex-direction:column;
+}
+.app-main .container-app { flex:1 0 auto; width:100%; }
+.app-main .footer-app { margin-top:auto; }
+.app-main--900 .container-app { max-width:900px; }
+.app-main--1100 .container-app { max-width:1100px; }
+.container-app { max-width:1200px; margin:0 auto; padding:0; }
+@media (min-width:992px) { .app-main { margin-left:var(--nb-sidebar-w); } }
+
+/* ---------- Sidebar ---------- */
+.nb-sidebar {
+    position:fixed;
+    z-index:1040;
+    top:0; bottom:0; left:0;
+    width:var(--nb-sidebar-w);
+    background:var(--nb-yellow);
+    border-right:3px solid #111111;
+    display:flex;
+    flex-direction:column;
+}
+.nb-sidebar-head { display:flex; align-items:center; gap:12px; padding:18px 16px 16px; border-bottom:3px solid #111111; }
+.nb-logo {
+    flex:none;
+    width:52px; height:52px;
+    background:#ffffff;
+    border:3px solid #111111;
+    border-radius:12px;
+    box-shadow:4px 4px 0 #111111;
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.45rem;
+    color:#111111;
+}
+.nb-brand { font-family:'Archivo Black', sans-serif; font-size:1.15rem; line-height:1.05; text-transform:uppercase; color:#111111; }
+.nb-brand-sub { font-size:.62rem; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:#111111; opacity:.7; margin-top:3px; }
+.nb-sidebar-body { flex:1; overflow-y:auto; padding:18px 16px; }
+.nb-menu-label {
+    display:inline-flex; align-items:center; gap:6px;
+    align-self:flex-start;
+    background:#111111; color:#ffffff;
+    font-size:.6rem; font-weight:800; letter-spacing:.22em; text-transform:uppercase;
+    padding:5px 10px; border-radius:8px;
+    margin-bottom:14px;
+}
+.nb-menu-item {
+    display:flex; align-items:center; gap:10px;
+    background:#ffffff;
+    border:2.5px solid #111111;
+    border-radius:10px;
+    box-shadow:4px 4px 0 #111111;
+    padding:11px 13px;
+    margin-bottom:10px;
+    color:#111111;
+    font-weight:700;
+    font-size:.9rem;
+    text-decoration:none;
+    transition:transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+.nb-menu-item i { font-size:1.1rem; flex:none; }
+.nb-menu-item:hover { transform:translate(2px,2px); box-shadow:2px 2px 0 #111111; background:#fff3bf; color:#111111; text-decoration:none; }
+.nb-menu-item.active { background:#111111; color:var(--nb-yellow); transform:translate(2px,2px); box-shadow:2px 2px 0 #111111; }
+.nb-menu-item.active i { color:var(--nb-yellow); }
+
+.nb-sidebar-foot { border-top:3px solid #111111; padding:14px 16px 18px; background:var(--nb-yellow); }
+.nb-user-chip {
+    display:flex; align-items:center; gap:10px;
+    background:#ffffff;
+    border:2.5px solid #111111;
+    border-radius:10px;
+    box-shadow:3px 3px 0 #111111;
+    padding:10px;
+    margin-bottom:12px;
+}
+.nb-user-avatar {
+    flex:none; width:42px; height:42px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--nb-pink);
+    border:2.5px solid #111111;
+    border-radius:10px;
+    font-family:'Archivo Black', sans-serif;
+    font-size:.95rem;
+    color:#111111;
+}
+.nb-user-name { font-weight:800; font-size:.85rem; line-height:1.05; word-break:break-word; color:#111111; }
+.nb-user-role { display:inline-block; background:#111111; color:#ffffff; font-size:.58rem; font-weight:800; letter-spacing:.18em; text-transform:uppercase; padding:3px 8px; border-radius:6px; margin-top:5px; }
+
+.nb-logout {
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    background:var(--nb-red);
+    border:2.5px solid #111111;
+    border-radius:10px;
+    box-shadow:4px 4px 0 #111111;
+    padding:10px 12px;
+    color:#111111;
+    font-weight:800; font-size:.85rem; text-transform:uppercase; letter-spacing:.05em;
+    text-decoration:none;
+    transition:transform .12s ease, box-shadow .12s ease, background-color .12s ease;
+}
+.nb-logout:hover { transform:translate(2px,2px); box-shadow:2px 2px 0 #111111; background:#ff8585; color:#111111; text-decoration:none; }
+
+/* ---------- Topbar mobile & offcanvas ---------- */
+.nb-topbar {
+    display:flex; align-items:center; gap:12px;
+    background:var(--nb-yellow);
+    border-bottom:3px solid #111111;
+    padding:10px 16px;
+    position:sticky; top:0; z-index:1030;
+}
+.nb-tb-btn {
+    flex:none; width:46px; height:46px;
+    display:inline-flex; align-items:center; justify-content:center;
+    background:#ffffff; color:#111111;
+    border:2.5px solid #111111; border-radius:10px;
+    box-shadow:3px 3px 0 #111111;
+    font-size:1.35rem;
+    transition:transform .12s ease, box-shadow .12s ease;
+}
+.nb-tb-btn:active { transform:translate(3px,3px); box-shadow:0 0 0 #111111; }
+.nb-tb-brand { font-family:'Archivo Black', sans-serif; font-size:1.05rem; text-transform:uppercase; color:#111111; }
+.offcanvas.nb-offcanvas { background:var(--nb-yellow); border-right:3px solid #111111; }
+.offcanvas.nb-offcanvas .offcanvas-header { border-bottom:3px solid #111111; padding:18px 16px; }
+.offcanvas.nb-offcanvas .offcanvas-body { padding:18px 16px; }
+
+/* ---------- Kartu (cards) ---------- */
+.card { background:var(--nb-surface); border:3px solid #111111; border-radius:var(--nb-radius); box-shadow:var(--shadow); }
+.card-header { background:transparent; border-bottom:3px solid #111111; font-weight:800; text-transform:uppercase; letter-spacing:.02em; font-size:.92rem; }
+.card-body { padding:22px; }
+
+/* ---------- Kartu statistik ---------- */
+.stat-card { background:var(--nb-surface); border:3px solid #111111; border-left:10px solid var(--primary); border-radius:12px; box-shadow:5px 5px 0 #111111; padding:18px 18px; }
+.stat-card .stat-num { font-family:'Archivo Black', 'Space Grotesk', sans-serif; font-size:2rem; font-weight:900; line-height:1; }
+.stat-card .stat-label { font-size:.7rem; color:#5f5b4e; font-weight:800; text-transform:uppercase; letter-spacing:.09em; margin-top:8px; }
+.stat-card.green { border-left-color:#4cd97b; }
+.stat-card.orange { border-left-color:var(--nb-orange); }
+.stat-card.blue { border-left-color:var(--nb-blue); }
+.stat-card.purple { border-left-color:var(--nb-purple); }
+
+/* ---------- Tabel ---------- */
+.table { color:#111111; }
+.table thead th { background:#111111; color:#ffffff; font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.08em; border-bottom:0; padding:.75rem .9rem; vertical-align:middle; }
+.table tbody td { border-bottom:2px solid #111111; padding:.8rem .9rem; color:#111111; font-weight:600; vertical-align:middle; }
+.table tbody tr:hover { background:#fff3bf; }
+.table tbody tr:last-child td { border-bottom:0; }
+.table .text-muted { color:#5f5b4e; }
+.table.table-borderless tbody td { border-bottom:2px dashed rgba(17,17,17,.30); }
+.table.table-borderless tbody tr:last-child td { border-bottom:0; }
+
+/* ---------- Badge ---------- */
+.badge {
+    display:inline-flex; align-items:center; gap:.32rem;
+    font-size:.72rem; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:#111111;
+    border:2px solid #111111; border-radius:8px;
+    box-shadow:2px 2px 0 #111111;
+    padding:.35rem .65rem;
+    background:#ffffff;
+}
+.badge-hadir, .badge-aktif { background:var(--nb-lime); }
+.badge-terlambat { background:var(--nb-orange); }
+.badge-izin, .badge-karyawan { background:var(--nb-cyan); }
+.badge-sakit, .badge-cuti { background:var(--nb-purple); }
+.badge-keluar { background:#ffb0aa; }
+.badge-admin { background:var(--nb-pink); }
+.badge-dark { background:#111111; color:#ffffff; }
+
+/* ---------- Tombol ---------- */
+.btn {
+    border:2.5px solid #111111;
+    border-radius:10px;
+    box-shadow:4px 4px 0 #111111;
+    font-weight:800;
+    transition:transform .12s ease, box-shadow .12s ease, background-color .12s ease, color .12s ease;
+}
+.btn:hover { transform:translate(2px,2px); box-shadow:2px 2px 0 #111111; }
+.btn:active { transform:translate(4px,4px); box-shadow:0 0 0 #111111; }
+.btn:disabled { opacity:.55; cursor:not-allowed; transform:none; box-shadow:2px 2px 0 #111111; }
+.btn-sm { padding:.32rem .7rem; font-size:.8rem; border-radius:9px; box-shadow:3px 3px 0 #111111; }
+
+.btn-primary { background:var(--primary); border-color:#111111; color:#111111; }
+.btn-primary:hover, .btn-primary:focus { background:var(--primary-hover); border-color:#111111; color:#111111; }
+.btn-success { background:var(--success); border-color:#111111; color:#111111; }
+.btn-success:hover, .btn-success:focus { background:#8bf0bb; border-color:#111111; color:#111111; }
+.btn-danger { background:var(--danger); border-color:#111111; color:#111111; }
+.btn-danger:hover, .btn-danger:focus { background:#ff8c8c; border-color:#111111; color:#111111; }
+.btn-warning { background:var(--warning); border-color:#111111; color:#111111; }
+.btn-warning:hover, .btn-warning:focus { background:#ffc078; border-color:#111111; color:#111111; }
+.btn-info { background:var(--info); border-color:#111111; color:#111111; }
+.btn-info:hover, .btn-info:focus { background:#a9fbff; border-color:#111111; color:#111111; }
+.btn-outline-secondary { background:#ffffff; border-color:#111111; color:#111111; }
+.btn-outline-secondary:hover, .btn-outline-secondary:focus { background:#fff3bf; border-color:#111111; color:#111111; }
+
+.input-group { border:2.5px solid #111111; border-radius:10px; background:#ffffff; overflow:hidden; box-shadow:3px 3px 0 #111111; }
+.input-group > .form-control { border:0; box-shadow:none; }
+.input-group > .form-control:focus { box-shadow:none; background:#fffbe6; }
+.input-group > .btn { border:0; border-left:2.5px solid #111111; box-shadow:none; border-radius:0; margin-left:0; }
+
+/* ---------- Alert ---------- */
+.alert { border:2.5px solid #111111; border-radius:12px; box-shadow:4px 4px 0 #111111; font-weight:700; color:#111111; padding:.9rem 1.05rem; font-size:.9rem; }
+.alert-success { background:var(--nb-lime); border-color:#111111; color:#111111; }
+.alert-danger { background:#ffb0aa; border-color:#111111; color:#111111; }
+.alert-warning { background:var(--nb-yellow); border-color:#111111; color:#111111; }
+.alert-info { background:var(--nb-cyan); border-color:#111111; color:#111111; }
+
+/* ---------- Form ---------- */
+.form-label { font-weight:800; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:#111111; margin-bottom:.35rem; }
+.form-text { color:#5f5b4e; font-weight:600; }
+.form-control, .form-select { border:2.5px solid #111111; border-radius:10px; padding:.6rem .85rem; font-weight:600; color:#111111; background:#ffffff; }
+.form-control:focus, .form-select:focus { border-color:#111111; background:#fffbe6; box-shadow:4px 4px 0 #111111; outline:0; }
+textarea.form-control { resize:vertical; font-weight:600; }
+
+/* ---------- Pagination ---------- */
+.pagination { display:flex; gap:8px; }
+.page-link { border:2.5px solid #111111; border-radius:8px; color:#111111; font-weight:800; background:#ffffff; box-shadow:3px 3px 0 #111111; padding:.45rem .8rem; }
+.page-link:hover { background:var(--nb-yellow-soft); color:#111111; }
+.page-item.active .page-link { background:#111111; color:var(--nb-yellow); }
+.page-item.disabled .page-link { background:#e7e0cf; border-style:dashed; box-shadow:none; }
+
+/* ---------- Footer ---------- */
+.footer-app { text-align:center; padding:20px 10px 0; color:#111111; font-weight:800; font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; }
+
+/* ---------- Halaman auth ---------- */
+body.auth-page { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; position:relative; overflow:hidden; }
+.auth-wrap { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px; width:100%; }
+.auth-card { width:100%; max-width:460px; background:var(--nb-surface); border:3px solid #111111; border-radius:18px; box-shadow:10px 10px 0 #111111; padding:34px; position:relative; z-index:1; }
+.auth-brand { text-align:center; margin-bottom:22px; }
+.auth-brand .logo-badge { width:64px; height:64px; margin:0 auto 14px; background:var(--nb-yellow); border:3px solid #111111; border-radius:14px; box-shadow:5px 5px 0 #111111; display:flex; align-items:center; justify-content:center; color:#111111; font-size:28px; }
+.auth-title { font-family:'Archivo Black', 'Space Grotesk', sans-serif; font-size:1.35rem; font-weight:900; text-transform:uppercase; margin:0; }
+.auth-subtitle { color:#5f5b4e; font-weight:700; font-size:.9rem; margin:6px 0 0; }
+.auth-footer { text-align:center; margin-top:18px; font-size:.92rem; color:#111111; font-weight:700; }
+.auth-footer a { color:#111111; font-weight:800; text-decoration:underline; text-decoration-thickness:2.5px; text-underline-offset:3px; }
+.auth-footer a:hover { background:var(--nb-yellow); }
+
+/* ---------- Dekorasi geometris halaman auth ---------- */
+.auth-page::before { content:''; position:fixed; top:8vh; left:8vw; width:110px; height:110px; background:var(--nb-pink); border:3px solid #111111; border-radius:50%; box-shadow:7px 7px 0 #111111; transform:rotate(-8deg); z-index:0; pointer-events:none; }
+.auth-page::after { content:''; position:fixed; bottom:10vh; right:8vw; width:95px; height:95px; background:var(--nb-cyan); border:3px solid #111111; border-radius:18px; box-shadow:7px 7px 0 #111111; transform:rotate(14deg); z-index:0; pointer-events:none; }
+@media (max-width:576px) { .auth-page::before { width:64px; height:64px; top:3vh; left:5vw; } .auth-page::after { width:56px; height:56px; bottom:3vh; right:5vw; } }
+
+/* ---------- Media print ---------- */
+@media print {
+    .nb-sidebar, .nb-topbar, .nb-offcanvas, .no-print, .footer-app { display:none !important; }
+    .app-main { margin-left:0 !important; padding:0; }
+    body { background:#ffffff !important; background-image:none !important; color:#000000 !important; }
+    .card, .stat-card, .table { box-shadow:none !important; border-color:#000000 !important; }
+    .page-title::after { content:none; }
+}
+
+
+/* ---------- Modal Neo Brutalism ---------- */
+.modal-content { border:3px solid #111111; border-radius:var(--nb-radius); box-shadow:10px 10px 0 #111111; background:var(--nb-surface); overflow:hidden; }
+.modal-header { border-bottom:3px solid #111111; background:var(--nb-yellow); padding:16px 22px; }
+.modal-header .modal-title { font-family:'Archivo Black','Space Grotesk',sans-serif; font-size:1rem; font-weight:900; text-transform:uppercase; letter-spacing:.02em; color:#111111; }
+.modal-header .btn-close { background-color:#ffffff; border:2.5px solid #111111; border-radius:8px; box-shadow:3px 3px 0 #111111; opacity:1; padding:.5rem; }
+.modal-header .btn-close:hover { transform:translate(2px,2px); box-shadow:1px 1px 0 #111111; }
+.modal-body { padding:22px; }
+.modal-footer { border-top:3px solid #111111; padding:14px 22px; background:var(--nb-bg); }
+.modal-lg { max-width:680px; }
+.modal-backdrop.show { opacity:.55; background:#111111; }
+
+/* ---------- Delete confirmation card ---------- */
+.nb-confirm-delete { display:flex; align-items:center; gap:12px; background:var(--nb-red); border:2.5px solid #111111; border-radius:10px; box-shadow:4px 4px 0 #111111; padding:12px 16px; }
+.nb-confirm-delete i { font-size:1.6rem; flex:none; }
+
+/* ---------- Stat card row spacing ---------- */
+.stat-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:14px; }
+
+/* ---------- Form section divider ---------- */
+.form-section-title { font-family:'Archivo Black','Space Grotesk',sans-serif; font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:.14em; color:#111111; background:var(--nb-yellow-soft); border:2px solid #111111; border-radius:8px; padding:7px 14px; margin-bottom:16px; display:inline-flex; align-items:center; gap:6px; }
+
+/* ---------- Empty state ---------- */
+.nb-empty { text-align:center; padding:40px 20px; }
+.nb-empty i { font-size:3rem; color:var(--nb-purple); display:block; margin-bottom:12px; }
+.nb-empty p { font-weight:700; color:#5f5b4e; margin:0; }
+
+/* ---------- Quick action buttons ---------- */
+.nb-action-group { display:inline-flex; gap:6px; }
+.nb-action-group .btn { padding:.3rem .6rem; font-size:.78rem; }
