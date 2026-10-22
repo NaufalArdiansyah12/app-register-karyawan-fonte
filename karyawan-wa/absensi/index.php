@@ -393,10 +393,10 @@ $pesanFlash = ($flash !== null) ? (string) ($flash['pesan'] ?? '') : '';
                     <div class="page-sub mb-0">Monitoring data absensi seluruh karyawan, rekapitulasi, &amp; input presensi manual.</div>
                 </div>
                 <div class="d-flex flex-wrap align-items-center gap-2">
-                    <a href="../admin/absen_masuk.php" class="btn btn-success">
+                    <a href="absen_masuk.php" class="btn btn-success">
                         <i class="bi bi-box-arrow-in-right me-1"></i>Absen Masuk
                     </a>
-                    <a href="../admin/absen_pulang.php" class="btn btn-warning">
+                    <a href="absen_pulang.php" class="btn btn-warning">
                         <i class="bi bi-box-arrow-out-right me-1"></i>Absen Pulang
                     </a>
                     <a href="?export=excel&dari=<?= urlencode($dari) ?>&sampai=<?= urlencode($sampai) ?>&karyawan_id=<?= (int)$karyawanId ?>&status=<?= urlencode($statusFilt) ?>&q=<?= urlencode($keyword) ?>" class="btn btn-outline-secondary" title="Download Excel">
@@ -634,7 +634,13 @@ $pesanFlash = ($flash !== null) ? (string) ($flash['pesan'] ?? '') : '';
                     <h2 class="page-title">Presensi Mandiri</h2>
                     <div class="page-sub mb-0">Halo, <strong><?= htmlspecialchars($user['nama'] ?? $_SESSION['nama']) ?></strong> — Catat absensi kehadiran harian Anda.</div>
                 </div>
-                <div class="d-flex align-items-center gap-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
+                    <a href="absen_masuk.php" class="btn btn-success">
+                        <i class="bi bi-box-arrow-in-right me-1"></i>Absen Masuk
+                    </a>
+                    <a href="absen_pulang.php" class="btn btn-warning">
+                        <i class="bi bi-box-arrow-out-right me-1"></i>Absen Pulang
+                    </a>
                     <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalIzin" <?= $absenHariIni ? 'disabled' : '' ?>>
                         <i class="bi bi-file-earmark-medical-fill me-1"></i>Ajukan Izin / Sakit
                     </button>
@@ -721,20 +727,14 @@ $pesanFlash = ($flash !== null) ? (string) ($flash['pesan'] ?? '') : '';
 
                             <div class="row g-2 pt-2" style="border-top:2px dashed rgba(17,17,17,.25);">
                                 <div class="col-md-6">
-                                    <form method="post" action="masuk.php" onsubmit="return confirm('Lakukan Absen Masuk sekarang?')">
-                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                                        <button type="submit" class="btn btn-success w-100 py-2" <?= ($absenHariIni && !in_array($absenHariIni['status'], ['izin', 'sakit'], true)) ? 'disabled' : '' ?>>
-                                            <i class="bi bi-box-arrow-in-right me-1"></i>Absen Masuk (Batas <?= JAM_BATAS_MASUK ?>)
-                                        </button>
-                                    </form>
+                                    <a href="absen_masuk.php" class="btn btn-success w-100 py-2">
+                                        <i class="bi bi-box-arrow-in-right me-1"></i>Halaman Absen Masuk (Batas <?= JAM_BATAS_MASUK ?>)
+                                    </a>
                                 </div>
                                 <div class="col-md-6">
-                                    <form method="post" action="pulang.php" onsubmit="return confirm('Lakukan Absen Pulang sekarang?')">
-                                        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token']) ?>">
-                                        <button type="submit" class="btn btn-warning w-100 py-2" <?= (!$absenHariIni || !$absenHariIni['jam_masuk'] || $absenHariIni['jam_pulang']) ? 'disabled' : '' ?>>
-                                            <i class="bi bi-box-arrow-out-right me-1"></i>Absen Pulang
-                                        </button>
-                                    </form>
+                                    <a href="absen_pulang.php" class="btn btn-warning w-100 py-2">
+                                        <i class="bi bi-box-arrow-out-right me-1"></i>Halaman Absen Pulang
+                                    </a>
                                 </div>
                             </div>
                         </div>

@@ -29,8 +29,11 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 $userId = (int) $_SESSION['user_id'];
 $tanggalHariIni = date('Y-m-d');
 $jamSekarang = date('H:i:s');
-$statusAbsen = ($jamSekarang <= JAM_BATAS_MASUK) ? 'hadir' : 'terlambat';
-$labelStatus = ($statusAbsen === 'hadir') ? 'Tepat Waktu ✅' : 'Terlambat ⚠️ (batas ' . JAM_BATAS_MASUK . ')';
+$jamBatasMasuk = getPengaturan($koneksi, 'jam_batas_masuk', defined('JAM_BATAS_MASUK') ? JAM_BATAS_MASUK : '08:00:00');
+$jamBatasMasukTampil = substr($jamBatasMasuk, 0, 5);
+
+$statusAbsen = ($jamSekarang <= $jamBatasMasuk) ? 'hadir' : 'terlambat';
+$labelStatus = ($statusAbsen === 'hadir') ? 'Tepat Waktu ✅' : 'Terlambat ⚠️ (batas ' . $jamBatasMasukTampil . ' WIB)';
 
 $stmt = $koneksi->prepare('SELECT id, karyawan_id, tanggal, jam_masuk, jam_pulang, status, catatan FROM absensi WHERE karyawan_id = ? AND tanggal = ? LIMIT 1');
 $stmt->bind_param('is', $userId, $tanggalHariIni);

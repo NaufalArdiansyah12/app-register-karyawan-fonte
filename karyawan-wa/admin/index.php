@@ -167,8 +167,8 @@ if (isset($_GET['export']) && $_GET['export'] === 'excel') {
                 <div class="page-sub">Statistik &amp; rekap absensi — <?= htmlspecialchars($tanggalHariIni) ?></div>
             </div>
             <div class="d-flex flex-wrap gap-2">
-                <a href="absen_masuk.php" class="btn btn-success"><i class="bi bi-box-arrow-in-right me-1"></i>Absen Masuk</a>
-                <a href="absen_pulang.php" class="btn btn-warning"><i class="bi bi-box-arrow-out-right me-1"></i>Absen Pulang</a>
+                <a href="../absensi/absen_masuk.php" class="btn btn-success"><i class="bi bi-box-arrow-in-right me-1"></i>Absen Masuk</a>
+                <a href="../absensi/absen_pulang.php" class="btn btn-warning"><i class="bi bi-box-arrow-out-right me-1"></i>Absen Pulang</a>
                 <a href="../karyawan/index.php?action=tambah" class="btn btn-primary"><i class="bi bi-person-plus-fill me-1"></i>Tambah Karyawan</a>
             </div>
         </div>

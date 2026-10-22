@@ -23,8 +23,12 @@ $errors = [];
 
 function normalisasiNoWA(string $nomor): string {
     $nomor = preg_replace('/[^0-9]/', '', $nomor);
-    if (strpos($nomor, '08') === 0) { $nomor = '62' . substr($nomor, 1); }
-    return ltrim($nomor, '0');
+    if (str_starts_with($nomor, '08')) {
+        $nomor = '62' . substr($nomor, 1);
+    } elseif (str_starts_with($nomor, '8')) {
+        $nomor = '62' . $nomor;
+    }
+    return $nomor;
 }
 
 $waPesanKaryawan = '';
@@ -34,11 +38,11 @@ $statusWaAdmin    = false;
 
 if (isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
 
-    $nama        = trim($_POST['nama'] ?? '');
-    $email       = strtolower(trim($_POST['email'] ?? ''));
-    $password    = $_POST['password'] ?? '';
+    $nama       = trim($_POST['nama'] ?? '');
+    $email      = strtolower(trim($_POST['email'] ?? ''));
+    $password   = $_POST['password'] ?? '';
     $konfirmasi = $_POST['konfirmasi_password'] ?? '';
-    $noWa        = normalisasiNoWA($_POST['no_wa'] ?? '');
+    $noWa       = normalisasiNoWA($_POST['no_wa'] ?? '');
     $jabatan    = trim($_POST['jabatan'] ?? '');
 
     if ($nama === '' || mb_strlen($nama) < 3) { $errors[] = 'Nama lengkap wajib diisi (min. 3 karakter).'; }
@@ -47,30 +51,57 @@ if (isset($_POST['csrf_token']) && hash_equals($_SESSION['csrf_token'], $_POST['
     $stmt = $koneksi->prepare('SELECT id FROM karyawan WHERE email = ? LIMIT 1');
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    if ($stmt->get_result()->fetch_assoc()) { $errors[] = 'Email sudah terdaftar.'; }
+    if ($stmt->get_result()->fetch_assoc()) { $errors[] = 'Email sudah terdaftar. Silakan gunakan email lain atau login.'; }
     $stmt->close();
 
     if (strlen($password) < 8) { $errors[] = 'Password minimal 8 karakter.'; }
-    if ($password !== $konfirmasi) { $errors[] = 'Konfirmasi password tidak sama.'; }
-    if ($noWa === '' || !preg_match('/^62\d{8,13}$/', $noWa)) { $errors[] = 'Format nomor WhatsApp tidak valid. Contoh: 6281234567890.'; }
+    if ($password !== $konfirmasi) { $errors[] = 'Konfirmasi password tidak cocok.'; }
+    if ($noWa === '' || !preg_match('/^62\d{8,14}$/', $noWa)) { $errors[] = 'Format nomor WhatsApp tidak valid. Contoh: 08123456789 atau 628123456789.'; }
     if ($jabatan === '') { $errors[] = 'Jabatan wajib diisi.'; }
 
     if (empty($errors)) {
         $hash = password_hash($password, PASSWORD_DEFAULT);
+        $departemenDefault = '-';
+        $roleDefault       = 'karyawan';
+        $statusDefault     = 'aktif';
+
         $stmt = $koneksi->prepare('INSERT INTO karyawan (nama, email, password, no_wa, jabatan, departemen, role, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
-        $stmt->bind_param('ssssssss', $nama, $email, $hash, $noWa, $jabatan, '-', 'karyawan', 'aktif');
+        $stmt->bind_param('ssssssss', $nama, $email, $hash, $noWa, $jabatan, $departemenDefault, $roleDefault, $statusDefault);
         $stmt->execute();
         $stmt->close();
 
-        $waPesanKaryawan = "🎉 *PENDAFTARAN BERHASIL*\n\nHalo {$nama},\n\nPendaftaran akun Anda di " . APP_NAME . " telah berhasil.\n\n📧 Email    : {$email}\n💼 Jabatan : {$jabatan}\n\nSilakan login menggunakan email & password yang Anda daftarkan.\n\nTerima kasih. 🙏";
+        $waktuDaftar = date('d-m-Y H:i');
+
+        // 1. Kirim WhatsApp ke nomor karyawan pendaftar
+        $waPesanKaryawan = "🎉 *PENDAFTARAN AKUN BERHASIL*\n\n"
+            . "Halo *{$nama}*,\n"
+            . "Selamat! Pendaftaran akun Anda di *" . APP_NAME . "* telah berhasil didaftarkan.\n\n"
+            . "📋 *Rincian Akun Terdaftar:*\n"
+            . "👤 Nama       : {$nama}\n"
+            . "📧 Email      : {$email}\n"
+            . "💼 Jabatan    : {$jabatan}\n"
+            . "📱 No. WA     : {$noWa}\n"
+            . "🕒 Waktu      : {$waktuDaftar} WIB\n\n"
+            . "Silakan login menggunakan email dan password yang telah Anda daftarkan untuk mulai melakukan presensi kerja harian.\n\n"
+            . "Terima kasih dan selamat beraktivitas! 🙏\n_" . APP_NAME . "_";
         $statusWaKaryawan = kirimWA($noWa, $waPesanKaryawan);
 
-        $waPesanAdmin = "🆕 *REGISTRASI KARYAWAN BARU*\n\nData karyawan baru:\n\n👤 Nama    : {$nama}\n📧 Email   : {$email}\n💼 Jabatan : {$jabatan}\n📱 No. WA  : {$noWa}\n🕒 Waktu   : " . date('d-m-Y H:i') . " WIB\n\nSilakan verifikasi melalui panel admin.";
-        $statusWaAdmin = kirimWA(ADMIN_WA, $waPesanAdmin);
+        // 2. Kirim WhatsApp ke nomor admin sebagai notifikasi sistem
+        if (ADMIN_WA !== '' && ADMIN_WA !== $noWa) {
+            $waPesanAdmin = "🆕 *PENDAFTARAN KARYAWAN BARU*\n\n"
+                . "Ada karyawan baru yang mendaftar melalui form registrasi:\n\n"
+                . "👤 Nama    : {$nama}\n"
+                . "📧 Email   : {$email}\n"
+                . "💼 Jabatan : {$jabatan}\n"
+                . "📱 No. WA  : {$noWa}\n"
+                . "🕒 Waktu   : {$waktuDaftar} WIB\n\n"
+                . "Akun langsung aktif dengan role Karyawan.";
+            $statusWaAdmin = kirimWA(ADMIN_WA, $waPesanAdmin);
+        }
 
-        $pesanSukses = $statusWaKaryawan && $statusWaAdmin
-            ? 'Registrasi berhasil! Notifikasi WhatsApp telah dikirim ke karyawan & admin.'
-            : 'Registrasi berhasil! Namun notifikasi WhatsApp gagal dikirim. Periksa logs/wa_log.txt.';
+        $pesanSukses = 'Registrasi berhasil! ' . ($statusWaKaryawan 
+            ? "Notifikasi WhatsApp telah berhasil dikirim ke nomor Anda (<strong>{$noWa}</strong>). Silakan login." 
+            : "Akun Anda sudah aktif. Namun notifikasi WhatsApp gagal terkirim.");
     } else {
         $pesanError = implode('<br>', $errors);
     }

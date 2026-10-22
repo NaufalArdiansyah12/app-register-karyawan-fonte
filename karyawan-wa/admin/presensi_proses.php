@@ -75,6 +75,8 @@ $jamPulangFinal = null;
 $statusFinal    = 'hadir';
 
 $jamSekarang = date('H:i:s');
+$jamBatasMasuk = getPengaturan($koneksi, 'jam_batas_masuk', defined('JAM_BATAS_MASUK') ? JAM_BATAS_MASUK : '08:00:00');
+$jamPulangBatas = getPengaturan($koneksi, 'jam_pulang', defined('JAM_PULANG') ? JAM_PULANG : '17:00:00');
 
 switch ($jenis) {
     case 'pulang':
@@ -89,7 +91,7 @@ switch ($jenis) {
     case 'hadir_lengkap':
         $jamMasukFinal  = ($jamMasuk !== '')  ? (strlen($jamMasuk) === 5 ? $jamMasuk . ':00' : $jamMasuk) : '08:00:00';
         $jamPulangFinal = ($jamPulang !== '') ? (strlen($jamPulang) === 5 ? $jamPulang . ':00' : $jamPulang) : '17:00:00';
-        $statusFinal    = ($jamMasukFinal <= JAM_BATAS_MASUK) ? 'hadir' : 'terlambat';
+        $statusFinal    = ($jamMasukFinal <= $jamBatasMasuk) ? 'hadir' : 'terlambat';
         if ($catatan === '') {
             $catatan = 'Presensi lengkap dicatat oleh Admin';
         }
@@ -117,7 +119,7 @@ switch ($jenis) {
     default:
         $jamMasukFinal  = ($jamMasuk !== '') ? (strlen($jamMasuk) === 5 ? $jamMasuk . ':00' : $jamMasuk) : $jamSekarang;
         $jamPulangFinal = $absenLama['jam_pulang'] ?? null;
-        $statusFinal    = ($jamMasukFinal <= JAM_BATAS_MASUK) ? 'hadir' : 'terlambat';
+        $statusFinal    = ($jamMasukFinal <= $jamBatasMasuk) ? 'hadir' : 'terlambat';
         if ($catatan === '') {
             $catatan = 'Absen masuk dicatat oleh Admin';
         }

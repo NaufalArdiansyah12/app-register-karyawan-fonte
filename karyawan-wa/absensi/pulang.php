@@ -29,6 +29,9 @@ if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST
 $userId = (int) $_SESSION['user_id'];
 $tanggalHariIni = date('Y-m-d');
 $jamPulang = date('H:i:s');
+$jamBatasPulang = getPengaturan($koneksi, 'jam_pulang', defined('JAM_PULANG') ? JAM_PULANG : '17:00:00');
+$jamBatasPulangTampil = substr($jamBatasPulang, 0, 5);
+$isPulangAwal = ($jamPulang < $jamBatasPulang);
 
 $stmt = $koneksi->prepare('SELECT id, karyawan_id, tanggal, jam_masuk, jam_pulang, status, catatan FROM absensi WHERE karyawan_id = ? AND tanggal = ? LIMIT 1');
 $stmt->bind_param('is', $userId, $tanggalHariIni);
@@ -54,9 +57,14 @@ if ($absen['jam_pulang']) {
     exit;
 }
 
-$stmtUpdate = $koneksi->prepare('UPDATE absensi SET jam_pulang = ? WHERE id = ?');
+$catatanPulang = $absen['catatan'] ? $absen['catatan'] : 'Absen pulang via portal';
+if ($isPulangAwal) {
+    $catatanPulang .= ' [Pulang awal sebelum ' . $jamBatasPulangTampil . ' WIB]';
+}
+
+$stmtUpdate = $koneksi->prepare('UPDATE absensi SET jam_pulang = ?, catatan = ? WHERE id = ?');
 $idAbsen = (int) $absen['id'];
-$stmtUpdate->bind_param('si', $jamPulang, $idAbsen);
+$stmtUpdate->bind_param('ssi', $jamPulang, $catatanPulang, $idAbsen);
 $stmtUpdate->execute();
 $stmtUpdate->close();
 

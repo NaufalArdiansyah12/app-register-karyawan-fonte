@@ -20,13 +20,16 @@ if ($nbRole === 'admin') {
     $nbMenu = [
         ['Dashboard',        '../admin/index.php',        'bi-grid-1x2-fill',        ($nbDir === 'admin' && $nbPage === 'index.php')],
         ['Kelola Karyawan',  '../karyawan/index.php',     'bi-people-fill',          ($nbDir === 'karyawan')],
-        ['Kelola Presensi',  '../absensi/index.php',      'bi-calendar2-check-fill', ($nbDir === 'absensi')],
-        ['Absen Masuk',      '../admin/absen_masuk.php',  'bi-box-arrow-in-right',   ($nbDir === 'admin' && $nbPage === 'absen_masuk.php')],
-        ['Absen Pulang',     '../admin/absen_pulang.php', 'bi-box-arrow-out-right',  ($nbDir === 'admin' && $nbPage === 'absen_pulang.php')],
+        ['Kelola Presensi',  '../absensi/index.php',      'bi-calendar2-check-fill', ($nbDir === 'absensi' && $nbPage === 'index.php')],
+        ['Absen Masuk',      '../absensi/absen_masuk.php', 'bi-box-arrow-in-right',  ($nbPage === 'absen_masuk.php')],
+        ['Absen Pulang',     '../absensi/absen_pulang.php','bi-box-arrow-out-right', ($nbPage === 'absen_pulang.php')],
+        ['Pengaturan Jam',   '../admin/pengaturan_jam.php','bi-gear-fill',           ($nbDir === 'admin' && $nbPage === 'pengaturan_jam.php')],
     ];
 } else {
     $nbMenu = [
-        ['Presensi Saya',    '../absensi/index.php',      'bi-alarm-fill',           ($nbDir === 'absensi')],
+        ['Presensi Saya',    '../absensi/index.php',      'bi-alarm-fill',           ($nbDir === 'absensi' && $nbPage === 'index.php')],
+        ['Absen Masuk',      '../absensi/absen_masuk.php', 'bi-box-arrow-in-right',  ($nbPage === 'absen_masuk.php')],
+        ['Absen Pulang',     '../absensi/absen_pulang.php','bi-box-arrow-out-right', ($nbPage === 'absen_pulang.php')],
     ];
 }
 
